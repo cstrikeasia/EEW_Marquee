@@ -492,7 +492,7 @@ function on_eew(data, type) {
 	setTimeout(() => {
 		$('.station_1_shindo').text(`，實測震度：0，距離震央：-km`);
 		$('.station_2_shindo').text(`，實測震度：0，距離震央：-km`);
-	},23000)
+	},40000)
 	eew(eew_msg);
 	TREM.eew = true;
 	let skip = false;
