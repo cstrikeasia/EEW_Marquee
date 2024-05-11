@@ -243,14 +243,13 @@ function on_rts_data(data) {
 		level_list = {};
 	}
 	
-	$('.location_intensity_1').text(`測站1：${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}`);
+	$('.location_intensity_1').text(`${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}`);
 	
-	$('.location_intensity_2').text(`測站2：${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}`);
+	$('.location_intensity_2').text(`${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}`);
 	
 	$('.max_gal').text(`最大加速度：${max_pga} gal`);
 	$('.time').text(`${formatTimestamp(data.time)}`);
-	$('.epic_intensity').text(`觀測最大震度：${int_to_intensity(rts_sation_intensity_number)}`);
-
+	$('.epic_intensity').text(`觀測最大震度：${int_to_intensity(max_intensity)}`);
 
 	let skip = false;
 	if (max_intensity < item_rts_level) {
