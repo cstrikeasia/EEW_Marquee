@@ -5,6 +5,7 @@ let time_local = 0;
 let rts_replay_timestamp = 0;
 let rts_replay_time = 0;
 let palert_time = 0;
+let _id = "";
 
 let level_list = {};
 const station_icon = {};

@@ -46,7 +46,7 @@ function eew(eew_msg) {
             $newsAlert.animate({ width: '175px' }, ANIMATION_DURATION);
 			setTimeout(function() {
 				notice(notice_msg);
-			}, 15000);
+			}, 25000);
         }, 2000);
     });
 }
@@ -58,7 +58,7 @@ let endPos = 0;
 function news(msg) {
     news_msg = msg;
     const msgLength = news_msg.length;
-    const endPosition = -msgLength * 26.5;
+    const endPosition = -msgLength * 28;
     addStyle(endPosition);
     
     const animationDuration = msgLength / 4;
@@ -98,6 +98,7 @@ function notice(notice_msg) {
     $newsAlert
         .animate({ width: '0px' }, ANIMATION_DURATION, function() {
             $newsAlert.css('display', 'none');
+            $containerUl.css('animation', `scroll 25s infinite linear`);
         });
 }
 
@@ -109,5 +110,4 @@ function resetMarquee() {
             width: 'auto'
         })
         .width();
-    $containerUl.css('animation', 'scroll 25s infinite linear');
 }
