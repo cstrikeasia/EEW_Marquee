@@ -58,10 +58,12 @@ let endPos = 0;
 function news(msg) {
     news_msg = msg;
     const msgLength = news_msg.length;
-    const endPosition = -msgLength * 28;
+	console.log(msgLength);
+    const endPosition = -msgLength * 29;
     addStyle(endPosition);
-    
-    const animationDuration = msgLength / 4;
+	
+    const pixelsPerSecond = 50;
+    const animationDuration = msgLength * 11 / pixelsPerSecond;
     animateNews('地震報告', function() {
         $containerLi
             .text(news_msg);
@@ -98,7 +100,6 @@ function notice(notice_msg) {
     $newsAlert
         .animate({ width: '0px' }, ANIMATION_DURATION, function() {
             $newsAlert.css('display', 'none');
-            $containerUl.css('animation', `scroll 25s infinite linear`);
         });
 }
 
@@ -110,4 +111,5 @@ function resetMarquee() {
             width: 'auto'
         })
         .width();
+		$containerUl.css('animation', `scroll 40s infinite linear`);
 }
