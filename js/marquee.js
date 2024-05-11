@@ -30,6 +30,8 @@ function animateNews(msg, callback) {
 
 /**地震速報**/
 function eew(eew_msg) {
+	$containerLi
+		.text('');
     const msgLength = eew_msg.length;
     const endPosition = -msgLength * 20;
 	addStyle(endPosition);
@@ -46,7 +48,7 @@ function eew(eew_msg) {
             $newsAlert.animate({ width: '175px' }, ANIMATION_DURATION);
 			setTimeout(function() {
 				notice(notice_msg);
-			}, 25000);
+			}, 20000);
         }, 2000);
     });
 }

@@ -65,15 +65,6 @@ function SelectStation(station) {
     });
 }
 
-function GetLocationStation(uuid){
-	const id = uuid.split('-')[2];
-    const me = station[id];
-    if (me) {
-        const { Lat, Long } = me;
-        return { Lat, Long };
-    }
-}
-
 function station_exec(station_data) {
 	let stations = {};
 	for (let k = 0, k_ks = Object.keys(station_data), n = k_ks.length; k < n; k++) {
@@ -229,6 +220,8 @@ function on_rts_data(data) {
 			//測站1
 			if (TREM.setting.rts_station1.includes(info.uuid)) {
 				rts_sation_loc_1 = info.Loc;
+				TREM.user.station_1.Lat = info.Lat;
+				TREM.user.station_1.Lon = info.Long;
 				rts_sation_intensity_1 = station_data.i;
 				rts_sation_intensity_number = intensity;
 				rts_sation_pga_1 = station_data.pga;
@@ -237,6 +230,8 @@ function on_rts_data(data) {
 			//測站2
 			if (TREM.setting.rts_station2.includes(info.uuid)) {
 				rts_sation_loc_2 = info.Loc;
+				TREM.user.station_2.Lat = info.Lat;
+				TREM.user.station_2.Lon = info.Long;
 				rts_sation_intensity_2 = station_data.i;
 				rts_sation_intensity_number = intensity;
 				rts_sation_pga_2 = station_data.pga;
@@ -248,22 +243,9 @@ function on_rts_data(data) {
 		level_list = {};
 	}
 	
-	const eew_data = data;
+	$('.location_intensity_1').text(`測站1：${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_1}`);
 	
-	TREM.user.station_1.Lat = GetLocationStation(TREM.setting.rts_station1).Lat;
-	TREM.user.station_1.Lon = GetLocationStation(TREM.setting.rts_station1).Long;
-	TREM.user.station_2.Lat = GetLocationStation(TREM.setting.rts_station2).Lat;
-	TREM.user.station_2.Lon = GetLocationStation(TREM.setting.rts_station2).Long;
-	
-	location_station_1_dist = `，距離震央：${Math.round(eew_location_info(eew_data,'station_1').dist) ? Math.round(eew_location_info(eew_data,'station_1').dist) : '-'}`;
-	location_station_2_dist = `，距離震央：${Math.round(eew_location_info(eew_data,'station_2').dist) ? Math.round(eew_location_info(eew_data,'station_2').dist) : '-'}`;
-
-	location_station_1_shindo = `，實測震度：${Math.round(eew_location_info(eew_data,'station_1').i) ? Math.round(eew_location_info(eew_data,'station_1').i) : 0}`;
-	location_station_2_shindo = `，實測震度：${Math.round(eew_location_info(eew_data,'station_2').i) ? Math.round(eew_location_info(eew_data,'station_2').i) : 0}`;
-	
-	$('.location_intensity_1').text(`測站1：${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_1}${location_station_1_shindo}${location_station_1_dist}km`);
-	
-	$('.location_intensity_2').text(`測站2：${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_2}${location_station_2_shindo}${location_station_1_dist}km`);
+	$('.location_intensity_2').text(`測站2：${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_2}`);
 	
 	$('.max_gal').text(`最大加速度：${max_pga} gal`);
 	$('.time').text(`${formatTimestamp(data.time)}`);
@@ -500,7 +482,18 @@ function get_data(data, type = "websocket") {
 
 
 function on_eew(data, type) {
-	console.log(data);
+	location_station_1_dist = `，距離震央：${Math.round(eew_location_info(data,'station_1').dist) ? Math.round(eew_location_info(data,'station_1').dist) : '-'}`;
+	location_station_2_dist = `，距離震央：${Math.round(eew_location_info(data,'station_2').dist) ? Math.round(eew_location_info(data,'station_2').dist) : '-'}`;
+
+	location_station_1_shindo = `，實測震度：${Math.round(intensity_float_to_int(eew_location_info(data,'station_1').i)) ? Math.round(intensity_float_to_int(eew_location_info(data,'station_1').i)) : 0}`;
+	location_station_2_shindo = `，實測震度：${Math.round(intensity_float_to_int(eew_location_info(data,'station_2').i)) ? Math.round(intensity_float_to_int(eew_location_info(data,'station_2').i)) : 0}`;
+
+	$('.station_1_shindo').text(`${location_station_1_shindo}${location_station_1_dist}km`);
+	$('.station_2_shindo').text(`${location_station_2_shindo}${location_station_2_dist}km`);
+	setTimeout(() => {
+		$('.station_1_shindo').text(`，實測震度：0，距離震央：-km`);
+		$('.station_2_shindo').text(`，實測震度：0，距離震央：-km`);
+	},23000)
 	eew(eew_msg);
 	TREM.eew = true;
 	let skip = false;

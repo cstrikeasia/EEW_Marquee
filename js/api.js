@@ -216,35 +216,23 @@ function intensity_float_to_int(float) {
 	return (float < 0) ? 0 : (float < 4.5) ? Math.round(float) : (float < 5) ? 5 : (float < 5.5) ? 6 : (float < 6) ? 7 : (float < 6.5) ? 8 : 9;
 }
 
-let location_info;
+let locinfo;
 let dist;
 let i;
-function eew_location_info(data,type) {
-	if(type === 'station_1'){
-		location_info = TREM.user.station_1;
-	} else if(type === 'station_2'){
-		location_info = TREM.user.station_2;
+function eew_location_info(data,t) {
+	if(t === 'station_1'){
+		locinfo = TREM.user.station_1;
+	} else if(t === 'station_2'){
+		locinfo = TREM.user.station_2;
 	}
-	
-	if(data.eq){
-		// 計算震央與使用者位置之間的地表距離
-		const dist_surface = dis(data.eq.lat, data.eq.lon, location_info.Lat, location_info.Lon);
-		// 計算震央與使用者位置之間的三維距離
-		dist = Math.sqrt(pow(dist_surface) + pow(data.eq.depth));
-		// 計算地震加速度
-		const pga = 1.657 * Math.pow(Math.E, (1.533 * data.eq.mag)) * Math.pow(dist, -1.607) * (storage.getItem("site") ?? 1.751);
-		// 轉換地震加速度為地震強度
-		i = pga_to_float(pga);
-		// 如果地震強度大於3，則使用eew_i函數重新計算
-		if (i > 3) {
-			i = eew_i([data.eq.lat, data.eq.lon], [location_info.Lat, location_info.Lon], data.eq.depth, data.eq.mag);
-		}
-	} else {
-		dist = 0;
-		i = 0;
+
+	const dist_surface = dis(data.eq.lat, data.eq.lon, locinfo.Lat, locinfo.Lon);
+	const dist = Math.sqrt(pow(dist_surface) + pow(data.eq.depth));
+	const pga = 1.657 * Math.pow(Math.E, (1.533 * data.eq.mag)) * Math.pow(dist, -1.607) * (storage.getItem("site") ?? 1.751);
+	let i = pga_to_float(pga);
+	if (i > 3) {
+		i = eew_i([data.eq.lat, data.eq.lon], [locinfo.Lat, locinfo.Lon], data.eq.depth, data.eq.mag);
 	}
-	
-	// 返回計算結果
 	return {
 		dist,
 		i,
@@ -257,44 +245,30 @@ function pow(int) {
 }
 
 function eew_i(epicenterLocaltion, pointLocaltion, depth, magW) {
-	// 計算震央距離
 	const long = 10 ** (0.5 * magW - 1.85) / 2;
 	const epicenterDistance = dis(epicenterLocaltion[0], epicenterLocaltion[1], pointLocaltion[0], pointLocaltion[1]);
-	// 計算震源距離
 	const hypocenterDistance = (depth ** 2 + epicenterDistance ** 2) ** 0.5 - long;
 	const x = Math.max(hypocenterDistance, 3);
-	// 計算 gpv600，即地震的 ground peak velocity (GPV) 在 600 公里處的預測值
-	// 根據地震的震級 (magW)、深度 (depth) 和距離 (x) 等參數計算
 	const gpv600 = 10 ** (
-		// 地震震級 (magW) 對 GPV 的貢獻
 		0.58 * magW +
-		// 地震深度 (depth) 對 GPV 的貢獻
-		0.0038 * depth - 1.29 -
-		// 考慮震央距離 (x) 對 GPV 的調節
-		Math.log10(x + 0.0028 * (10 ** (0.5 * magW))) -
-		// 考慮震源距離 (x) 對 GPV 的調節
-		0.002 * x
+      0.0038 * depth - 1.29 -
+      Math.log10(x + 0.0028 * (10 ** (0.5 * magW))) -
+      0.002 * x
 	);
 	const arv = 1.0;
-	// 計算 pgv400
 	const pgv400 = gpv600 * 1.31;
-	// 計算 pgv
 	const pgv = pgv400 * arv;
-	// 返回 Intensity
 	return 2.68 + 1.72 * Math.log10(pgv);
 }
 
 function dis(latA, lngA, latB, lngB) {
-	// 將經緯度轉換為弧度
 	latA = latA * Math.PI / 180;
 	lngA = lngA * Math.PI / 180;
 	latB = latB * Math.PI / 180;
 	lngB = lngB * Math.PI / 180;
-	// 計算相應的 sin 和 cos 值
 	const sin_latA = Math.sin(Math.atan(Math.tan(latA)));
 	const sin_latB = Math.sin(Math.atan(Math.tan(latB)));
 	const cos_latA = Math.cos(Math.atan(Math.tan(latA)));
 	const cos_latB = Math.cos(Math.atan(Math.tan(latB)));
-	// 計算兩點間距離
 	return Math.acos(sin_latA * sin_latB + cos_latA * cos_latB * Math.cos(lngA - lngB)) * 6371.008;
 }

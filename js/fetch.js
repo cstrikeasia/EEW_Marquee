@@ -32,6 +32,8 @@ function connectWebSocket() {
 				news(reportFormat(data));
 				break;
 			case 'station':
+				$('.station_1_shindo').text(`，實測震度：0，距離震央：-km`);
+				$('.station_2_shindo').text(`，實測震度：0，距離震央：-km`);
 				station = station_exec(data);
 				SelectStation(station);
 				break;
