@@ -3,7 +3,7 @@ let ws;
 
 function connectWebSocket() {
     ws = new WebSocket(wsURL);
-	const token = 'bWl5YXNob29vb29fdGVzdA';
+	const token = 'XXX';
     ws.addEventListener("open", function (event) {
         console.log("WebSocket connected");
         sendWebSocketMessage({ type: 'region', token: token });
