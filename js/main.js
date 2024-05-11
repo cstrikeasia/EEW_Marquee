@@ -1,5 +1,6 @@
 const map_style_v = storage.getItem("map_style") ?? "1";
 const item_eew_level = storage.getItem("eew-level") ?? -1;
+const speecd_use = storage.getItem("speecd_use") ?? false;
 const item_audio_eew = storage.getItem("audio.EEW") ?? true;
 const item_audio_update = storage.getItem("audio.update") ?? true;
 const item_rts_level = storage.getItem("rts-level") ?? -1;
@@ -13,6 +14,7 @@ let eew_speech = {
 	text   : "",
 	module : "",
 };
+	
 
 function SelectStation(station) {
     const Station1Select = $('.station_1');
@@ -61,6 +63,15 @@ function SelectStation(station) {
         TREM.setting.rts_station2 = SelectedStation;
         sessionStorage.setItem('rts_station2', SelectedStation);
     });
+}
+
+function GetLocationStation(uuid){
+	const id = uuid.split('-')[2];
+    const me = station[id];
+    if (me) {
+        const { Lat, Long } = me;
+        return { Lat, Long };
+    }
 }
 
 function station_exec(station_data) {
@@ -116,6 +127,8 @@ function station_exec(station_data) {
 }
 
 let notification = '';
+let location_station_1_shindo = '';
+let location_station_2_shindo = '';
 function on_rts_data(data) {
 	data.Alert = (Object.keys(detection_list).length !== 0);
 	MAXPGA = { pga: 0, station: "NA", level: 0 };
@@ -235,13 +248,22 @@ function on_rts_data(data) {
 		level_list = {};
 	}
 	
-	$('.location_intensity_1').text(`測站1：${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}，震度：${get_lang_string("word.intensity")} ${rts_sation_intensity_1}`);
+	TREM.user.station_1.Lat = GetLocationStation(TREM.setting.rts_station1).Lat;
+	TREM.user.station_1.Lon = GetLocationStation(TREM.setting.rts_station1).Long;
+	TREM.user.station_2.Lat = GetLocationStation(TREM.setting.rts_station2).Lat;
+	TREM.user.station_2.Lon = GetLocationStation(TREM.setting.rts_station2).Long;
 	
-	$('.location_intensity_2').text(`測站2：${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}，震度：${get_lang_string("word.intensity")} ${rts_sation_intensity_2}`);
+	location_station_1_shindo = `，實測震度：${Math.round(eew_location_info(data,'station_1').i) ? Math.round(eew_location_info(data,'station_1').i) : 0}`;
+	location_station_2_shindo = `，實測震度：${Math.round(eew_location_info(data,'station_2').i) ? Math.round(eew_location_info(data,'station_2').i) : 0}`;
+	
+	$('.location_intensity_1').text(`測站1：${rts_sation_loc_1}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_1}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_1}${location_station_1_shindo}`);
+	
+	$('.location_intensity_2').text(`測站2：${rts_sation_loc_2}，PGA：${get_lang_string("word.pga")} ${rts_sation_pga_2}，計測震度：${get_lang_string("word.intensity")}${rts_sation_intensity_2}${location_station_2_shindo}`);
 	
 	$('.max_gal').text(`最大加速度：${max_pga} gal`);
 	$('.time').text(`${formatTimestamp(data.time)}`);
 	$('.epic_intensity').text(`觀測最大震度：${int_to_intensity(rts_sation_intensity_number)}`);
+
 
 	let skip = false;
 	if (max_intensity < item_rts_level) {

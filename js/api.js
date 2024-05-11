@@ -55,8 +55,14 @@ let TREM = {
 	},
 	user: {
 		icon : null,
-		lat  : 0,
-		lon  : 0,
+		station_1 : {
+			Lat  : 0,
+			Lon  : 0,
+		},
+		station_2 : {
+			Lat  : 0,
+			Lon  : 0,
+		}
 	},
 	report_icon_list : {},
 	size             : 0,
@@ -209,19 +215,35 @@ function intensity_float_to_int(float) {
 	// 將地震強度的浮點值轉換為對應的地震強度整數值
 	return (float < 0) ? 0 : (float < 4.5) ? Math.round(float) : (float < 5) ? 5 : (float < 5.5) ? 6 : (float < 6) ? 7 : (float < 6.5) ? 8 : 9;
 }
-function eew_location_info(data) {
-	// 計算震央與使用者位置之間的地表距離
-	const dist_surface = dis(data.eq.lat, data.eq.lon, TREM.user.lat, TREM.user.lon);
-	// 計算震央與使用者位置之間的三維距離
-	const dist = Math.sqrt(pow(dist_surface) + pow(data.eq.depth));
-	// 計算地震加速度
-	const pga = 1.657 * Math.pow(Math.E, (1.533 * data.eq.mag)) * Math.pow(dist, -1.607) * (storage.getItem("site") ?? 1.751);
-	// 轉換地震加速度為地震強度
-	let i = pga_to_float(pga);
-	// 如果地震強度大於3，則使用 eew_i 函數重新計算
-	if (i > 3) {
-		i = eew_i([data.eq.lat, data.eq.lon], [TREM.user.lat, TREM.user.lon], data.eq.depth, data.eq.mag);
+
+let location_info;
+let dist;
+let i;
+function eew_location_info(data,type) {
+	if(type === 'station_1'){
+		location_info = TREM.user.station_1;
+	} else if(type === 'station_2'){
+		location_info = TREM.user.station_2;
 	}
+	
+	if(data.eq){
+		// 計算震央與使用者位置之間的地表距離
+		const dist_surface = dis(data.eq.lat, data.eq.lon, location_info.Lat, location_info.Lon);
+		// 計算震央與使用者位置之間的三維距離
+		dist = Math.sqrt(pow(dist_surface) + pow(data.eq.depth));
+		// 計算地震加速度
+		const pga = 1.657 * Math.pow(Math.E, (1.533 * data.eq.mag)) * Math.pow(dist, -1.607) * (storage.getItem("site") ?? 1.751);
+		// 轉換地震加速度為地震強度
+		i = pga_to_float(pga);
+		// 如果地震強度大於3，則使用eew_i函數重新計算
+		if (i > 3) {
+			i = eew_i([data.eq.lat, data.eq.lon], [location_info.Lat, location_info.Lon], data.eq.depth, data.eq.mag);
+		}
+	} else {
+		dist = 0;
+		i = 0;
+	}
+	
 	// 返回計算結果
 	return {
 		dist,

@@ -94,13 +94,13 @@ function notice(notice_msg) {
     const msgLength = notice_msg.length;
     const endPosition = -msgLength * 33;
 	addStyle(endPosition);
-    $containerLi
-        .text(notice_msg);
     resetMarquee();
     $newsAlert
         .animate({ width: '0px' }, ANIMATION_DURATION, function() {
             $newsAlert.css('display', 'none');
         });
+    $containerLi
+        .text(notice_msg);
 }
 
 /**重置跑馬燈位置**/
