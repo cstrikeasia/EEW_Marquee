@@ -23,4 +23,4 @@
 20240512更新-
 修復觀測最大震度不會變動的問題
 
-<img src="https://ibb.co/LPzxznj">
+![image](https://i.ibb.co/xsS1SJ9/eew-marquee-screen.png)
