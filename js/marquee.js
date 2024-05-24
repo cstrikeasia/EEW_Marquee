@@ -48,7 +48,7 @@ function eew(eew_msg) {
             $newsAlert.animate({ width: '175px' }, ANIMATION_DURATION);
 			setTimeout(function() {
 				notice(notice_msg);
-			}, 20000);
+			}, 25000);
         }, 2000);
     });
 }

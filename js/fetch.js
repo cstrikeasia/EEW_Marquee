@@ -3,7 +3,7 @@ let ws;
 
 function connectWebSocket() {
     ws = new WebSocket(wsURL);
-	const token = 'bWl5YXNob29vb29fdGVzdA';
+	const token = 'bWl5YXNob29vb29fdGVzdAJasper';
     ws.addEventListener("open", function (event) {
         console.log("WebSocket connected");
         sendWebSocketMessage({ type: 'region', token: token });
@@ -20,7 +20,6 @@ function connectWebSocket() {
     ws.addEventListener("message", function (event) {
         const e = event.data;
         const data = JSON.parse(e);
-		
 		switch(data.t){
 			case 'region':
 				region = data;
@@ -51,7 +50,6 @@ function connectWebSocket() {
         setTimeout(connectWebSocket, 2000);
     });
 }
-
 connectWebSocket();
 
 function sendWebSocketMessage(t) {
@@ -113,17 +111,7 @@ function addStyle(endPosition) {
 }
 
 function EEWRequest(data) {
-    const _now = new Date().getTime();
-    for (const key in data) {
-        if (Object.hasOwnProperty.call(data, key)) {
-            const eew = data[key];
-            console.log(eew);
-            eew.time = _now;
-            eew.type = "eew-cwb";
-            get_data(eew, "http");
-            console.log('eew', eew);
-        }
-    }
+    get_data(data, "http");
 }
 
 function RTSRequest(data) {
