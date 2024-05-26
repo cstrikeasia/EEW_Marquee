@@ -352,28 +352,13 @@ function on_rts_data(data) {
 
 function get_data(data, type = "websocket") {
 	console.log('get_data',data);
+	console.log('data type',data.type)
 	if (data.type != "trem-rts") {
 		type_list.time = now_time();
 		if (type == "websocket") {
 			type_list.websocket = now_time();
 		} else if (type == "http") {
 			type_list.http = now_time();
-		}
-	}
-	if (data.replay_timestamp) {
-		if (data_cache.includes(data.replay_timestamp)) {
-			return;
-		} else {
-			data_cache.push(data.replay_timestamp);
-		}
-	} else if (data.timestamp) {
-		if (data_cache.includes(data.timestamp)) {
-			return;
-		} else {
-			data_cache.push(data.timestamp);
-		}
-		if (Now().getTime() - data.timestamp > 10000) {
-			return;
 		}
 	}
 	if (data.id && data.number) {
@@ -450,12 +435,7 @@ function get_data(data, type = "websocket") {
 		}
 		TREM.report_time = now_time();
 	} else if (data.type == "eew-report" || data.type == "eew-cwb") {
-		if (Now().getTime() - data.time > 240_000 && !data.replay_timestamp) {
-			return;
-		}
-		if (rts_replay_timestamp && !data.replay_timestamp) {
-			return;
-		}
+		console.log('eew',true);
 		on_eew(data, type);
 	} else if (data.type == "tsunami") {
 		on_tsunami(data, type);
