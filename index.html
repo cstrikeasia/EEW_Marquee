@@ -1,52 +1,55 @@
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href="css/main.css">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"
+></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
 <div class="container">
-    <div class="news_alert">
-        <ul>
-            <li>
-            </li>
-        </ul>
-    </div>
-    <div class="news-container">
-        <ul>
-            <li>
-            </li>
-        </ul>
-    </div>
+  <div class="news_alert">
+    <ul>
+      <li></li>
+    </ul>
+  </div>
+  <div class="news-container">
+    <ul>
+      <li></li>
+    </ul>
+  </div>
 </div>
 <div class="time"></div>
 
 <!--測站1-->
-<div class="now_rts_1" style="margin-top:5vw;display: flex;">
-	<div class="location_intensity_1"></div><div class="station_1_shindo"></div>
+<div class="now_rts_1" style="margin-top: 5vw; display: flex">
+  <div class="location_intensity_1"></div>
+  <div class="station_1_shindo"></div>
 </div>
 
 <!--測站2-->
-<div class="now_rts_2" style="margin-top:1vw;display: flex;">
-	<div class="location_intensity_2"></div><div class="station_2_shindo"></div>
+<div class="now_rts_2" style="margin-top: 1vw; display: flex">
+  <div class="location_intensity_2"></div>
+  <div class="station_2_shindo"></div>
 </div>
 
-<div class="epic_shindo" style="margin-top:1vw;">
-	<div class="max_gal"></div>
-	<div class="epic_intensity"></div>
-	<div class="notification"></div>
+<div class="epic_shindo" style="margin-top: 1vw">
+  <div class="max_gal"></div>
+  <div class="epic_intensity"></div>
+  <div class="notification"></div>
 </div>
 
-<div style="margin-top:3vw;">
-	<label>測站1</label>
-	<select class="station_1">
-	</select>
-	<p></p>
-	<label>測站2</label>
-	<select class="station_2">
-	</select>
+<div style="margin-top: 3vw">
+  <label>測站1</label>
+  <select class="station_1"></select>
+  <p></p>
+  <label>測站2</label>
+  <select class="station_2"></select>
 </div>
 
-<div class="test" style="margin-top:3vw;">
-	<button onclick="eew_test()">速報</button>
+<div class="test" style="margin-top: 3vw">
+  <button onclick="eew_test()">速報測試按鈕</button>
 </div>
 
+<script src="js/global.js"></script>
 <script src="js/api.js"></script>
 <script src="js/fetch.js"></script>
 <script src="js/main.js"></script>
