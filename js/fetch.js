@@ -1,7 +1,7 @@
 const wsURL = "wss://bcl666.live:5278/eew";
 let ws;
 
-const API_KEY = "bWl5YXNob29vb29fdGVzdAJasperx";
+const API_KEY = "";
 
 function connectWebSocket() {
   ws = new WebSocket(wsURL);
