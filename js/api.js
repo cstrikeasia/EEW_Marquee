@@ -99,7 +99,7 @@ function eew_location_info(data, t) {
     1.657 *
     Math.pow(Math.E, 1.533 * data.eq.mag) *
     Math.pow(dist, -1.607) *
-    (storage.getItem("site") ?? 1.751);
+    1.751;
   let i = pga_to_float(pga);
   if (i > 3) {
     i = eew_i(

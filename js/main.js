@@ -225,18 +225,14 @@ function on_eew(data) {
   }`;
 
   global.loc_shindo.s1 = `，實測震度：${
-    Math.round(intensity_float_to_int(eew_location_info(data, "station_1").i))
-      ? Math.round(
-          intensity_float_to_int(eew_location_info(data, "station_1").i)
-        )
-      : 0
+    global.intensity_list[
+      Math.round(intensity_float_to_int(eew_location_info(data, "station_1").i))
+    ] || 0
   }`;
   global.loc_shindo.s2 = `，實測震度：${
-    Math.round(intensity_float_to_int(eew_location_info(data, "station_2").i))
-      ? Math.round(
-          intensity_float_to_int(eew_location_info(data, "station_2").i)
-        )
-      : 0
+    global.intensity_list[
+      Math.round(intensity_float_to_int(eew_location_info(data, "station_2").i))
+    ] || 0
   }`;
 
   $(".station_1_shindo").text(
